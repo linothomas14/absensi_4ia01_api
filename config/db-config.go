@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/linothomas14/absensi_4ia01_api/model"
+	"github.com/linothomas14/absensi_4ia01_api/entity"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -24,12 +24,12 @@ func SetupDatabaseConnection() *gorm.DB {
 	dbPort := 5432
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai",
 		dbHost, dbPort, dbUser, dbPass, dbName)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Failed to create a connection to DB")
 	}
 
-	db.AutoMigrate(&model.Mahasiswa{})
+	db.AutoMigrate(&entity.Mahasiswa{}, &entity.Presensi{})
 
 	fmt.Println("Successfully connected!")
 	return db

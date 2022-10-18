@@ -3,15 +3,15 @@ package repository
 import (
 	"log"
 
-	"github.com/linothomas14/absensi_4ia01_api/model"
+	"github.com/linothomas14/absensi_4ia01_api/entity"
 
 	"gorm.io/gorm"
 )
 
 type MahasiswaRepository interface {
-	InsertMahasiswa(mhs model.Mahasiswa) model.Mahasiswa
-	AllMahasiswa() []model.Mahasiswa
-	FindByNPM(npm string) model.Mahasiswa
+	InsertMahasiswa(mhs entity.Mahasiswa) entity.Mahasiswa
+	AllMahasiswa() []entity.Mahasiswa
+	FindByNPM(npm string) entity.Mahasiswa
 }
 
 type mahasiswaConnection struct {
@@ -24,15 +24,15 @@ func NewMahasiswaRepository(db *gorm.DB) MahasiswaRepository {
 	}
 }
 
-func (db *mahasiswaConnection) AllMahasiswa() []model.Mahasiswa {
-	var mhs []model.Mahasiswa
+func (db *mahasiswaConnection) AllMahasiswa() []entity.Mahasiswa {
+	var mhs []entity.Mahasiswa
 	db.connection.Find(&mhs)
 	return mhs
 
 }
 
-func (db *mahasiswaConnection) FindByNPM(npm string) model.Mahasiswa {
-	var mhs model.Mahasiswa
+func (db *mahasiswaConnection) FindByNPM(npm string) entity.Mahasiswa {
+	var mhs entity.Mahasiswa
 
 	db.connection.Where("NPM = ?", npm).Take(&mhs)
 	log.Println(mhs)
@@ -40,7 +40,7 @@ func (db *mahasiswaConnection) FindByNPM(npm string) model.Mahasiswa {
 
 }
 
-func (db *mahasiswaConnection) InsertMahasiswa(m model.Mahasiswa) model.Mahasiswa {
+func (db *mahasiswaConnection) InsertMahasiswa(m entity.Mahasiswa) entity.Mahasiswa {
 	db.connection.Save(&m)
 	return m
 }

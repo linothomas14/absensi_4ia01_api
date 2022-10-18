@@ -13,8 +13,13 @@ import (
 var (
 	db                  *gorm.DB                       = config.SetupDatabaseConnection()
 	mahasiswaRepository repository.MahasiswaRepository = repository.NewMahasiswaRepository(db)
-	mahasiswaService    service.MahasiswaService       = service.NewMahasiswaService(mahasiswaRepository)
+	presensiRepository  repository.PresensiRepository  = repository.NewPresensiRepository(db)
+
+	mahasiswaService service.MahasiswaService = service.NewMahasiswaService(mahasiswaRepository)
+	presensiService  service.PresensiService  = service.NewPresensiService(presensiRepository)
+
 	mahasiswaController controller.MahasiswaController = controller.NewMahasiswaController(mahasiswaService)
+	presensiController  controller.PresensiController  = controller.NewPresensiController(presensiService)
 )
 
 func PingHandler(c *gin.Context) {
@@ -24,15 +29,19 @@ func PingHandler(c *gin.Context) {
 }
 
 func main() {
-	// config.MigrateDB(db)
 	defer config.CloseDatabaseConnection(db)
 	r := gin.Default()
 
 	mhsRoutes := r.Group("api/mahasiswa")
 	{
 		mhsRoutes.GET("/", mahasiswaController.All)
-		mhsRoutes.POST("/", mahasiswaController.Insert)
 		mhsRoutes.GET("/:npm", mahasiswaController.FindByNPM)
+	}
+
+	presensiRoutes := r.Group("api/presensi")
+	{
+		presensiRoutes.POST("/", presensiController.Insert)
+		presensiRoutes.GET("/:npm", mahasiswaController.FindByNPM)
 	}
 	r.GET("api/ping", mahasiswaController.All)
 	r.Run()

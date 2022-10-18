@@ -1,6 +1,6 @@
 package dto
 
-//MahasiswaUpdateDTO is a model that client use when updating a Mahasiswa
+//MahasiswaUpdateDTO is a entity that client use when updating a Mahasiswa
 // type MahasiswaUpdateDTO struct {
 // 	ID          uint64 `json:"id" form:"id" binding:"required"`
 // 	Title       string `json:"title" form:"title" binding:"required"`
@@ -8,7 +8,7 @@ package dto
 // 	UserID      uint64 `json:"user_id,omitempty"  form:"user_id,omitempty"`
 // }
 
-//MahasiswaCreateDTO is is a model that clinet use when create a new Mahasiswa
+//MahasiswaCreateDTO is is a entity that client use when create a new Mahasiswa
 type MahasiswaCreateDTO struct {
 	NPM  string `json:"npm" form:"npm" binding:"required"`
 	Nama string `json:"nama" form:"nama" binding:"required"`

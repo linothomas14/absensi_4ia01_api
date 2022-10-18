@@ -1,4 +1,4 @@
-package model
+package entity
 
 type Mahasiswa struct {
 	ID   uint8  `gorm:"type:int(10);not null;unique;autoIncrement:true" json:"id"`

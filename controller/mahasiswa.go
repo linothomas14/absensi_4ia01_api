@@ -28,11 +28,12 @@ func NewMahasiswaController(mahasiswaServ service.MahasiswaService) MahasiswaCon
 		mahasiswaService: mahasiswaServ,
 	}
 }
+
 func (c *mahasiswaController) All(context *gin.Context) {
 
 	var mahasiswas []entity.Mahasiswa = c.mahasiswaService.All()
-	// fmt.Println(mahasiswas)
-	res := helper.BuildResponse(true, "OK", mahasiswas)
+
+	res := helper.BuildResponse("OK", mahasiswas)
 	context.JSON(http.StatusOK, res)
 }
 
@@ -44,7 +45,7 @@ func (c *mahasiswaController) FindByNPM(context *gin.Context) {
 		res := helper.BuildErrorResponse("Data not found", "No data with given NPM", helper.EmptyObj{})
 		context.JSON(http.StatusNotFound, res)
 	} else {
-		res := helper.BuildResponse(true, "OK", mhs)
+		res := helper.BuildResponse("OK", mhs)
 		context.JSON(http.StatusOK, res)
 	}
 }

@@ -37,9 +37,9 @@ func (c *presensiController) Insert(context *gin.Context) {
 		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)
 	} else {
-		// presensiInsertDTO.NPM = "123"
+
 		result := c.presensiService.Insert(presensiInsertDTO)
-		response := helper.BuildResponse(true, "OK", result)
+		response := helper.BuildResponse("OK", result)
 		context.JSON(http.StatusCreated, response)
 	}
 }

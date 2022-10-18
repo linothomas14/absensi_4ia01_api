@@ -11,11 +11,9 @@ type Response struct {
 
 type EmptyObj struct{}
 
-func BuildResponse(status bool, message string, data interface{}) Response {
+func BuildResponse(message string, data interface{}) Response {
 	res := Response{
-		Status:  status,
 		Message: message,
-		Error:   nil,
 		Data:    data,
 	}
 

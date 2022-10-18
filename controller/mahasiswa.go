@@ -3,7 +3,6 @@ package controller
 import (
 	"net/http"
 
-	"github.com/linothomas14/absensi_4ia01_api/entity"
 	"github.com/linothomas14/absensi_4ia01_api/helper"
 	"github.com/linothomas14/absensi_4ia01_api/service"
 
@@ -31,18 +30,23 @@ func NewMahasiswaController(mahasiswaServ service.MahasiswaService) MahasiswaCon
 
 func (c *mahasiswaController) All(context *gin.Context) {
 
-	var mahasiswas []entity.Mahasiswa = c.mahasiswaService.All()
+	var res helper.Response
+	mahasiswas, err := c.mahasiswaService.All()
 
-	res := helper.BuildResponse("OK", mahasiswas)
+	if err != nil {
+		res = helper.BuildErrorResponse(err.Error(), mahasiswas)
+	}
+
+	res = helper.BuildResponse("OK", mahasiswas)
 	context.JSON(http.StatusOK, res)
 }
 
 func (c *mahasiswaController) FindByNPM(context *gin.Context) {
 	npm := context.Param("npm")
 
-	var mhs entity.Mahasiswa = c.mahasiswaService.FindByNPM(npm)
-	if (mhs == entity.Mahasiswa{}) {
-		res := helper.BuildErrorResponse("Data not found", "No data with given NPM", helper.EmptyObj{})
+	mhs, err := c.mahasiswaService.FindByNPM(npm)
+	if err != nil {
+		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusNotFound, res)
 	} else {
 		res := helper.BuildResponse("OK", mhs)

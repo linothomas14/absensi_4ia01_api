@@ -11,8 +11,8 @@ import (
 )
 
 type MahasiswaService interface {
-	FindByNPM(npm string) entity.Mahasiswa
-	All() []entity.Mahasiswa
+	FindByNPM(npm string) (entity.Mahasiswa, error)
+	All() ([]entity.Mahasiswa, error)
 	Insert(m dto.MahasiswaCreateDTO) entity.Mahasiswa
 }
 
@@ -26,12 +26,12 @@ func NewMahasiswaService(mhsRep repository.MahasiswaRepository) MahasiswaService
 	}
 }
 
-func (service *mahasiswaService) All() []entity.Mahasiswa {
+func (service *mahasiswaService) All() ([]entity.Mahasiswa, error) {
 
 	return service.mahasiswaRepository.AllMahasiswa()
 }
 
-func (service *mahasiswaService) FindByNPM(npm string) entity.Mahasiswa {
+func (service *mahasiswaService) FindByNPM(npm string) (entity.Mahasiswa, error) {
 	return service.mahasiswaRepository.FindByNPM(npm)
 }
 

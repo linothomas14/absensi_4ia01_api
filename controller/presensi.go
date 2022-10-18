@@ -34,7 +34,7 @@ func (c *presensiController) Insert(context *gin.Context) {
 	errDTO := context.ShouldBind(&presensiInsertDTO)
 
 	if errDTO != nil {
-		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
+		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)
 	} else {
 

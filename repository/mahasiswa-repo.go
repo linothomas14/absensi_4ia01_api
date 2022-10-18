@@ -10,8 +10,8 @@ import (
 
 type MahasiswaRepository interface {
 	InsertMahasiswa(mhs entity.Mahasiswa) entity.Mahasiswa
-	AllMahasiswa() []entity.Mahasiswa
-	FindByNPM(npm string) entity.Mahasiswa
+	AllMahasiswa() ([]entity.Mahasiswa, error)
+	FindByNPM(npm string) (entity.Mahasiswa, error)
 }
 
 type mahasiswaConnection struct {
@@ -24,19 +24,25 @@ func NewMahasiswaRepository(db *gorm.DB) MahasiswaRepository {
 	}
 }
 
-func (db *mahasiswaConnection) AllMahasiswa() []entity.Mahasiswa {
+func (db *mahasiswaConnection) AllMahasiswa() ([]entity.Mahasiswa, error) {
 	var mhs []entity.Mahasiswa
-	db.connection.Find(&mhs)
-	return mhs
+	err := db.connection.Find(&mhs).Error
+	if err != nil {
+		return []entity.Mahasiswa{}, err
+	}
+	return mhs, err
 
 }
 
-func (db *mahasiswaConnection) FindByNPM(npm string) entity.Mahasiswa {
+func (db *mahasiswaConnection) FindByNPM(npm string) (entity.Mahasiswa, error) {
 	var mhs entity.Mahasiswa
 
-	db.connection.Where("NPM = ?", npm).Take(&mhs)
+	err := db.connection.Where("NPM = ?", npm).Take(&mhs).Error
+	if err != nil {
+		return entity.Mahasiswa{}, err
+	}
 	log.Println(mhs)
-	return mhs
+	return mhs, err
 
 }
 

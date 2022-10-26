@@ -36,12 +36,20 @@ func (c *presensiController) Insert(context *gin.Context) {
 	if errDTO != nil {
 		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)
-	} else {
-
-		result := c.presensiService.Insert(presensiInsertDTO)
-		response := helper.BuildResponse("OK", result)
-		context.JSON(http.StatusCreated, response)
+		return
 	}
+
+	result, err := c.presensiService.Insert(presensiInsertDTO)
+
+	if err != nil {
+		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	response := helper.BuildResponse("OK", result)
+	context.JSON(http.StatusCreated, response)
+
 }
 
 func (c *presensiController) FindByMatkulAndDate(context *gin.Context) {

@@ -12,7 +12,7 @@ import (
 
 type PresensiService interface {
 	FindByMatkulAndDate(matkul, waktu string) entity.Presensi
-	Insert(p dto.PresensiInsertDTO) entity.Presensi
+	Insert(p dto.PresensiInsertDTO) (entity.Presensi, error)
 }
 
 type presensiService struct {
@@ -29,13 +29,19 @@ func (service *presensiService) FindByMatkulAndDate(matkul, waktu string) entity
 	return service.presensiRepository.FindByMatkulAndDate(matkul, waktu)
 }
 
-func (service *presensiService) Insert(p dto.PresensiInsertDTO) entity.Presensi {
+func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi, error) {
 	presensi := entity.Presensi{}
+
 	err := smapping.FillStruct(&presensi, smapping.MapFields(&p))
 
 	if err != nil {
 		log.Fatalf("Failed map %v: ", err)
+		return entity.Presensi{}, err
 	}
-	res := service.presensiRepository.InsertPresensi(presensi)
-	return res
+	res, err := service.presensiRepository.InsertPresensi(presensi)
+
+	if err != nil {
+		return entity.Presensi{}, err
+	}
+	return res, err
 }

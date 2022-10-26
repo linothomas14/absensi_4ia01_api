@@ -7,7 +7,7 @@ import (
 	"github.com/linothomas14/absensi_4ia01_api/entity"
 
 	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -21,15 +21,15 @@ func SetupDatabaseConnection() *gorm.DB {
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
 	dbName := os.Getenv("DB_NAME")
-	dbPort := 5432
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai",
-		dbHost, dbPort, dbUser, dbPass, dbName)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dbPort := os.Getenv("DB_PORT")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+		dbUser, dbPass, dbHost, dbPort, dbName)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Failed to create a connection to DB")
 	}
 
-	db.AutoMigrate(&entity.Mahasiswa{}, &entity.Presensi{})
+	db.Debug().AutoMigrate(&entity.Mahasiswa{}, &entity.Presensi{})
 
 	fmt.Println("Successfully connected!")
 	return db

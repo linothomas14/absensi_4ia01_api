@@ -7,7 +7,7 @@ import (
 )
 
 type PresensiRepository interface {
-	InsertPresensi(mhs entity.Presensi) entity.Presensi
+	InsertPresensi(mhs entity.Presensi) (entity.Presensi, error)
 	FindByMatkulAndDate(matkul, waktu string) entity.Presensi
 }
 
@@ -30,9 +30,9 @@ func (db *presensiConnection) FindByMatkulAndDate(matkul, waktu string) entity.P
 
 }
 
-func (db *presensiConnection) InsertPresensi(p entity.Presensi) entity.Presensi {
+func (db *presensiConnection) InsertPresensi(p entity.Presensi) (entity.Presensi, error) {
 
-	db.connection.Save(&p)
-	db.connection.Preload("Mahasiswa").Find(&p)
-	return p
+	err := db.connection.Save(&p).Error
+	err = db.connection.Preload("Mahasiswa").Find(&p).Error
+	return p, err
 }

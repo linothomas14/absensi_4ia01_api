@@ -13,7 +13,8 @@ import (
 
 type PresensiController interface {
 	// All(context *gin.Context)
-	FindByMatkulAndMinggu(context *gin.Context)
+	// BackupFindByMatkulAndMinggu(context *gin.Context)
+	FindPresensiByMatkulAndMinggu(context *gin.Context)
 	Insert(context *gin.Context)
 	// Update(context *gin.Context)
 	// Delete(context *gin.Context)
@@ -53,7 +54,31 @@ func (c *presensiController) Insert(context *gin.Context) {
 
 }
 
-func (c *presensiController) FindByMatkulAndMinggu(context *gin.Context) {
+// func (c *presensiController) BackupFindByMatkulAndMinggu(context *gin.Context) {
+// 	var presensiGetDTO dto.PresensiGetDTO
+
+// 	errDTO := context.ShouldBindJSON(&presensiGetDTO)
+
+// 	if errDTO != nil {
+// 		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
+// 		context.JSON(http.StatusBadRequest, res)
+// 		return
+// 	}
+// 	log.Println(presensiGetDTO.Matkul, presensiGetDTO.Minggu)
+// 	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, int(presensiGetDTO.Minggu))
+
+// 	if err != nil {
+// 		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
+// 		context.JSON(http.StatusBadRequest, res)
+// 		return
+// 	}
+
+// 	response := helper.BuildResponse("OK", result)
+// 	context.JSON(http.StatusCreated, response)
+
+// }
+
+func (c *presensiController) FindPresensiByMatkulAndMinggu(context *gin.Context) {
 	var presensiGetDTO dto.PresensiGetDTO
 
 	errDTO := context.ShouldBindJSON(&presensiGetDTO)
@@ -63,9 +88,9 @@ func (c *presensiController) FindByMatkulAndMinggu(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, res)
 		return
 	}
-	log.Println(presensiGetDTO.Matkul, presensiGetDTO.Minggu)
-	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, int(presensiGetDTO.Minggu))
 
+	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, int(presensiGetDTO.Minggu))
+	log.Println(result)
 	if err != nil {
 		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)

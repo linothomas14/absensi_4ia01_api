@@ -11,7 +11,8 @@ import (
 )
 
 type PresensiService interface {
-	FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
+	// BackupFindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
+	FindByMatkulAndMinggu(matkul string, minggu int) (interface{}, error)
 	Insert(p dto.PresensiInsertDTO) (entity.Presensi, error)
 }
 
@@ -25,10 +26,17 @@ func NewPresensiService(mhsRep repository.PresensiRepository) PresensiService {
 	}
 }
 
-func (service *presensiService) FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error) {
+func (service *presensiService) FindByMatkulAndMinggu(matkul string, minggu int) (interface{}, error) {
 
-	return service.presensiRepository.FindByMatkulAndMinggu(matkul, minggu)
+	val, err := service.presensiRepository.FindPresensiByMatkulAndMinggu(matkul, minggu)
+	log.Println(val)
+	return val, err
 }
+
+// func (service *presensiService) BackupFindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error) {
+
+// 	return service.presensiRepository.BackupFindByMatkulAndMinggu(matkul, minggu)
+// }
 
 func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi, error) {
 	presensi := entity.Presensi{}

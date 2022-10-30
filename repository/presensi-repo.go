@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/linothomas14/absensi_4ia01_api/entity"
 
 	"gorm.io/gorm"
@@ -8,8 +10,8 @@ import (
 
 type PresensiRepository interface {
 	InsertPresensi(mhs entity.Presensi) (entity.Presensi, error)
-	FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
-	FindPresensiByMatkulAndMinggu(matkul string, minggu int) ([]entity.Presensi, error)
+	// BackupFindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
+	FindPresensiByMatkulAndMinggu(matkul string, minggu int) (interface{}, error)
 }
 
 type presensiConnection struct {
@@ -22,23 +24,25 @@ func NewPresensiRepository(db *gorm.DB) PresensiRepository {
 	}
 }
 
-func (db *presensiConnection) FindPresensiByMatkulAndMinggu(matkul string, minggu int) ([]entity.Presensi, error) {
+func (db *presensiConnection) FindPresensiByMatkulAndMinggu(matkul string, minggu int) (interface{}, error) {
 
-	var presensis []entity.Presensi
-
-	err := db.connection.Where("matkul = ? AND minggu = ?", matkul, minggu).Take(&presensis).Error
-
-	return presensis, err
-
-}
-
-func (db *presensiConnection) FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error) {
-	var presensi entity.Presensi
-	err := db.connection.Where("matkul = ? AND minggu = ?", matkul, minggu).Take(&presensi).Error
-
-	return presensi, err
+	var mahasiswaPresensi []entity.Presensi
+	err := db.connection.Where("matkul = ? AND minggu = ?", matkul, minggu).Find(&mahasiswaPresensi).Error
+	if err != nil {
+		return []entity.Presensi{}, err
+	}
+	log.Println(mahasiswaPresensi)
+	return mahasiswaPresensi, err
 
 }
+
+// func (db *presensiConnection) BackupFindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error) {
+
+// 	var presensi entity.Presensi
+// 	err := db.connection.Where("matkul = ? AND minggu = ?", matkul, minggu).Take(&presensi).Error
+
+// 	return presensi, err
+// }
 
 func (db *presensiConnection) InsertPresensi(p entity.Presensi) (entity.Presensi, error) {
 

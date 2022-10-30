@@ -9,5 +9,5 @@ type PresensiInsertDTO struct {
 
 type PresensiGetDTO struct {
 	Matkul string `json:"matkul" form:"matkul" binding:"required"`
-	Minggu string `json:"minggu" form:"minggu" binding:"required"`
+	Minggu uint8  `json:"minggu" form:"minggu" binding:"required"`
 }

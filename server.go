@@ -41,6 +41,7 @@ func main() {
 	presensiRoutes := r.Group("api/presensi")
 	{
 		presensiRoutes.POST("/", presensiController.Insert)
+		presensiRoutes.GET("/", presensiController.FindByMatkulAndMinggu)
 		presensiRoutes.GET("/:npm", mahasiswaController.FindByNPM)
 	}
 	r.GET("api/ping", mahasiswaController.All)

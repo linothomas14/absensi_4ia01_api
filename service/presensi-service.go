@@ -11,7 +11,7 @@ import (
 )
 
 type PresensiService interface {
-	FindByMatkulAndDate(matkul, waktu string) entity.Presensi
+	FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
 	Insert(p dto.PresensiInsertDTO) (entity.Presensi, error)
 }
 
@@ -25,8 +25,9 @@ func NewPresensiService(mhsRep repository.PresensiRepository) PresensiService {
 	}
 }
 
-func (service *presensiService) FindByMatkulAndDate(matkul, waktu string) entity.Presensi {
-	return service.presensiRepository.FindByMatkulAndDate(matkul, waktu)
+func (service *presensiService) FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error) {
+
+	return service.presensiRepository.FindByMatkulAndMinggu(matkul, minggu)
 }
 
 func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi, error) {

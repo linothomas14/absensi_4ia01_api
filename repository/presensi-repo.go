@@ -8,7 +8,8 @@ import (
 
 type PresensiRepository interface {
 	InsertPresensi(mhs entity.Presensi) (entity.Presensi, error)
-	FindByMatkulAndDate(matkul, waktu string) entity.Presensi
+	FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
+	FindPresensiByMatkulAndMinggu(matkul string, minggu int) ([]entity.Presensi, error)
 }
 
 type presensiConnection struct {
@@ -21,18 +22,30 @@ func NewPresensiRepository(db *gorm.DB) PresensiRepository {
 	}
 }
 
-func (db *presensiConnection) FindByMatkulAndDate(matkul, waktu string) entity.Presensi {
+func (db *presensiConnection) FindPresensiByMatkulAndMinggu(matkul string, minggu int) ([]entity.Presensi, error) {
+
+	var presensis []entity.Presensi
+
+	err := db.connection.Where("matkul = ? AND minggu = ?", matkul, minggu).Take(&presensis).Error
+
+	return presensis, err
+
+}
+
+func (db *presensiConnection) FindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error) {
 	var presensi entity.Presensi
+	err := db.connection.Where("matkul = ? AND minggu = ?", matkul, minggu).Take(&presensi).Error
 
-	db.connection.Where("matkul = ?", matkul).Take(&presensi)
-
-	return presensi
+	return presensi, err
 
 }
 
 func (db *presensiConnection) InsertPresensi(p entity.Presensi) (entity.Presensi, error) {
 
 	err := db.connection.Save(&p).Error
-	err = db.connection.Preload("Mahasiswa").Find(&p).Error
+	if err != nil {
+		return p, err
+	}
+	err = db.connection.Find(&p).Error
 	return p, err
 }

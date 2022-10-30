@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/linothomas14/absensi_4ia01_api/dto"
@@ -12,7 +13,7 @@ import (
 
 type PresensiController interface {
 	// All(context *gin.Context)
-	FindByMatkulAndDate(context *gin.Context)
+	FindByMatkulAndMinggu(context *gin.Context)
 	Insert(context *gin.Context)
 	// Update(context *gin.Context)
 	// Delete(context *gin.Context)
@@ -30,9 +31,9 @@ func NewPresensiController(presensiServ service.PresensiService) PresensiControl
 }
 func (c *presensiController) Insert(context *gin.Context) {
 	var presensiInsertDTO dto.PresensiInsertDTO
-
+	log.Println(presensiInsertDTO)
 	errDTO := context.ShouldBind(&presensiInsertDTO)
-
+	log.Println(presensiInsertDTO)
 	if errDTO != nil {
 		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)
@@ -52,6 +53,26 @@ func (c *presensiController) Insert(context *gin.Context) {
 
 }
 
-func (c *presensiController) FindByMatkulAndDate(context *gin.Context) {
+func (c *presensiController) FindByMatkulAndMinggu(context *gin.Context) {
+	var presensiGetDTO dto.PresensiGetDTO
+
+	errDTO := context.ShouldBindJSON(&presensiGetDTO)
+
+	if errDTO != nil {
+		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+	log.Println(presensiGetDTO.Matkul, presensiGetDTO.Minggu)
+	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, int(presensiGetDTO.Minggu))
+
+	if err != nil {
+		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	response := helper.BuildResponse("OK", result)
+	context.JSON(http.StatusCreated, response)
 
 }

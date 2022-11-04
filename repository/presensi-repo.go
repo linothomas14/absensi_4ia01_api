@@ -10,7 +10,7 @@ import (
 type PresensiRepository interface {
 	InsertPresensi(mhs entity.Presensi) (entity.Presensi, error)
 	FindPresensiByMatkulAndMinggu(matkul string, minggu uint8) ([]dto.PresensiResultDTO, error)
-	FindPresensi(npm string) (*entity.Presensi, error)
+	FindPresensi(npm string, matkul string, minggu uint8) (*entity.Presensi, error)
 }
 
 type presensiConnection struct {
@@ -22,10 +22,10 @@ func NewPresensiRepository(db *gorm.DB) PresensiRepository {
 		connection: db,
 	}
 }
-func (db *presensiConnection) FindPresensi(npm string) (*entity.Presensi, error) {
+func (db *presensiConnection) FindPresensi(npm string, matkul string, minggu uint8) (*entity.Presensi, error) {
 	var res *entity.Presensi
 
-	err := db.connection.Where("NPM = ?", npm).Take(&res).Error
+	err := db.connection.Where("NPM = ? AND matkul = ? AND minggu = ?", npm, matkul, minggu).Take(&res).Error
 
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (db *presensiConnection) FindPresensi(npm string) (*entity.Presensi, error)
 func (db *presensiConnection) FindPresensiByMatkulAndMinggu(matkul string, minggu uint8) ([]dto.PresensiResultDTO, error) {
 
 	var mahasiswaPresensi []dto.PresensiResultDTO
-	err := db.connection.Table("presensi").Select("presensi.npm, mahasiswa.nama").Joins("JOIN mahasiswa on presensi.npm = mahasiswa.npm").Where("matkul = ? AND minggu = ?", matkul, minggu).Find(&mahasiswaPresensi).Error
+	err := db.connection.Table("presensi").Select("presensi.npm, mahasiswa.nama").Joins("JOIN mahasiswa on presensi.npm = mahasiswa.npm").Where("matkul = ? AND minggu = ?", matkul, minggu).Order("nama asc").Find(&mahasiswaPresensi).Error
 	if err != nil {
 		return nil, err
 	}

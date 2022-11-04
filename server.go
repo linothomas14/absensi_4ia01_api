@@ -16,7 +16,7 @@ var (
 	presensiRepository  repository.PresensiRepository  = repository.NewPresensiRepository(db)
 
 	mahasiswaService service.MahasiswaService = service.NewMahasiswaService(mahasiswaRepository)
-	presensiService  service.PresensiService  = service.NewPresensiService(presensiRepository)
+	presensiService  service.PresensiService  = service.NewPresensiService(presensiRepository, mahasiswaRepository)
 
 	mahasiswaController controller.MahasiswaController = controller.NewMahasiswaController(mahasiswaService)
 	presensiController  controller.PresensiController  = controller.NewPresensiController(presensiService)

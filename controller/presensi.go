@@ -12,7 +12,8 @@ import (
 
 type PresensiController interface {
 	// All(context *gin.Context)
-	FindByMatkulAndDate(context *gin.Context)
+	// BackupFindByMatkulAndMinggu(context *gin.Context)
+	FindPresensiByMatkulAndMinggu(context *gin.Context)
 	Insert(context *gin.Context)
 	// Update(context *gin.Context)
 	// Delete(context *gin.Context)
@@ -52,6 +53,26 @@ func (c *presensiController) Insert(context *gin.Context) {
 
 }
 
-func (c *presensiController) FindByMatkulAndDate(context *gin.Context) {
+func (c *presensiController) FindPresensiByMatkulAndMinggu(context *gin.Context) {
+	var presensiGetDTO dto.PresensiGetDTO
+
+	errDTO := context.ShouldBindJSON(&presensiGetDTO)
+
+	if errDTO != nil {
+		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, uint8(presensiGetDTO.Minggu))
+
+	if err != nil {
+		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	response := helper.BuildResponse("OK", result)
+	context.JSON(http.StatusCreated, response)
 
 }

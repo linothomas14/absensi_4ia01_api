@@ -12,18 +12,19 @@ import (
 )
 
 type PresensiService interface {
-	// BackupFindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
 	FindByMatkulAndMinggu(matkul string, minggu uint8) (responseGetPresensi, error)
 	Insert(p dto.PresensiInsertDTO) (entity.Presensi, error)
 }
 
 type presensiService struct {
-	presensiRepository repository.PresensiRepository
+	presensiRepository  repository.PresensiRepository
+	mahasiswaRepository repository.MahasiswaRepository
 }
 
-func NewPresensiService(mhsRep repository.PresensiRepository) PresensiService {
+func NewPresensiService(preRep repository.PresensiRepository, mhsRep repository.MahasiswaRepository) PresensiService {
 	return &presensiService{
-		presensiRepository: mhsRep,
+		presensiRepository:  preRep,
+		mahasiswaRepository: mhsRep,
 	}
 }
 
@@ -43,11 +44,18 @@ func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi
 		log.Fatalf("Failed map %v: ", err)
 		return entity.Presensi{}, err
 	}
+	// Check if mahasiswa not in 4IA01
+	mhs, err := service.mahasiswaRepository.FindByNPM(presensi.NPM)
+	// log.Println(&mhs)
+	if mhs.NPM == "" {
+		err := errors.New(mhs.NPM + " not register in 4IA01")
+		return entity.Presensi{}, err
+	}
 
-	isExist, err := service.presensiRepository.FindPresensi(presensi.NPM)
+	mhs2, err := service.presensiRepository.FindPresensi(presensi.NPM, presensi.Matkul, presensi.Minggu)
 
-	if isExist != nil {
-		err := errors.New(isExist.NPM + " Already present")
+	if mhs2 != nil {
+		err := errors.New(mhs2.NPM + " Already present")
 		return entity.Presensi{}, err
 	}
 

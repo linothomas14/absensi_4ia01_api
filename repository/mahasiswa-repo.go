@@ -37,7 +37,7 @@ func (db *mahasiswaConnection) FindByNPM(npm string) (entity.Mahasiswa, error) {
 
 	err := db.connection.Where("NPM = ?", npm).Take(&mhs).Error
 	if err != nil {
-		return entity.Mahasiswa{}, err
+		return mhs, err
 	}
 	return mhs, err
 

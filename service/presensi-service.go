@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"log"
 
 	"github.com/linothomas14/absensi_4ia01_api/dto"
@@ -12,7 +13,7 @@ import (
 
 type PresensiService interface {
 	// BackupFindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error)
-	FindByMatkulAndMinggu(matkul string, minggu int) (interface{}, error)
+	FindByMatkulAndMinggu(matkul string, minggu uint8) (responseGetPresensi, error)
 	Insert(p dto.PresensiInsertDTO) (entity.Presensi, error)
 }
 
@@ -26,17 +27,12 @@ func NewPresensiService(mhsRep repository.PresensiRepository) PresensiService {
 	}
 }
 
-func (service *presensiService) FindByMatkulAndMinggu(matkul string, minggu int) (interface{}, error) {
+func (service *presensiService) FindByMatkulAndMinggu(matkul string, minggu uint8) (responseGetPresensi, error) {
 
 	val, err := service.presensiRepository.FindPresensiByMatkulAndMinggu(matkul, minggu)
-	log.Println(val)
-	return val, err
+	res := parseGetPresensi(matkul, minggu, val)
+	return res, err
 }
-
-// func (service *presensiService) BackupFindByMatkulAndMinggu(matkul string, minggu int) (entity.Presensi, error) {
-
-// 	return service.presensiRepository.BackupFindByMatkulAndMinggu(matkul, minggu)
-// }
 
 func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi, error) {
 	presensi := entity.Presensi{}
@@ -47,10 +43,35 @@ func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi
 		log.Fatalf("Failed map %v: ", err)
 		return entity.Presensi{}, err
 	}
+
+	isExist, err := service.presensiRepository.FindPresensi(presensi.NPM)
+
+	if isExist != nil {
+		err := errors.New(isExist.NPM + " Already present")
+		return entity.Presensi{}, err
+	}
+
 	res, err := service.presensiRepository.InsertPresensi(presensi)
 
 	if err != nil {
 		return entity.Presensi{}, err
 	}
 	return res, err
+}
+
+func parseGetPresensi(matkul string, minggu uint8, mahasiswa []dto.PresensiResultDTO) responseGetPresensi {
+
+	var res responseGetPresensi
+
+	res.Matkul = matkul
+	res.Minggu = minggu
+	res.Mahasiswa = mahasiswa
+
+	return res
+}
+
+type responseGetPresensi struct {
+	Matkul    string                  `json:"matkul"`
+	Minggu    uint8                   `json:"minggu"`
+	Mahasiswa []dto.PresensiResultDTO `json:"mahasiswa"`
 }

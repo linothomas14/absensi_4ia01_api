@@ -5,6 +5,7 @@ type Presensi struct {
 	NPM    string `gorm:"type:varchar(9);not null;" json:"npm"`
 	Matkul string `gorm:"type:varchar(50);" json:"matkul"`
 	Minggu uint8  `gorm:"type:int(2);" json:"minggu"`
+	// Mahasiswa []Mahasiswa `gorm:"foreignKey:NPM"`
 }
 
 func (Presensi) TableName() string {

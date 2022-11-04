@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/linothomas14/absensi_4ia01_api/dto"
@@ -32,9 +31,9 @@ func NewPresensiController(presensiServ service.PresensiService) PresensiControl
 }
 func (c *presensiController) Insert(context *gin.Context) {
 	var presensiInsertDTO dto.PresensiInsertDTO
-	log.Println(presensiInsertDTO)
+
 	errDTO := context.ShouldBind(&presensiInsertDTO)
-	log.Println(presensiInsertDTO)
+
 	if errDTO != nil {
 		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)
@@ -54,30 +53,6 @@ func (c *presensiController) Insert(context *gin.Context) {
 
 }
 
-// func (c *presensiController) BackupFindByMatkulAndMinggu(context *gin.Context) {
-// 	var presensiGetDTO dto.PresensiGetDTO
-
-// 	errDTO := context.ShouldBindJSON(&presensiGetDTO)
-
-// 	if errDTO != nil {
-// 		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
-// 		context.JSON(http.StatusBadRequest, res)
-// 		return
-// 	}
-// 	log.Println(presensiGetDTO.Matkul, presensiGetDTO.Minggu)
-// 	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, int(presensiGetDTO.Minggu))
-
-// 	if err != nil {
-// 		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
-// 		context.JSON(http.StatusBadRequest, res)
-// 		return
-// 	}
-
-// 	response := helper.BuildResponse("OK", result)
-// 	context.JSON(http.StatusCreated, response)
-
-// }
-
 func (c *presensiController) FindPresensiByMatkulAndMinggu(context *gin.Context) {
 	var presensiGetDTO dto.PresensiGetDTO
 
@@ -89,8 +64,8 @@ func (c *presensiController) FindPresensiByMatkulAndMinggu(context *gin.Context)
 		return
 	}
 
-	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, int(presensiGetDTO.Minggu))
-	log.Println(result)
+	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, uint8(presensiGetDTO.Minggu))
+
 	if err != nil {
 		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, res)

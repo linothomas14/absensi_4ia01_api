@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/linothomas14/absensi_4ia01_api/entity"
 
 	"gorm.io/gorm"
@@ -41,7 +39,6 @@ func (db *mahasiswaConnection) FindByNPM(npm string) (entity.Mahasiswa, error) {
 	if err != nil {
 		return entity.Mahasiswa{}, err
 	}
-	log.Println(mhs)
 	return mhs, err
 
 }

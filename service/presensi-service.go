@@ -13,7 +13,8 @@ import (
 
 type PresensiService interface {
 	FindByMatkulAndMinggu(matkul string, minggu uint8) (responseGetPresensi, error)
-	Insert(p dto.PresensiInsertDTO) (entity.Presensi, error)
+	Insert(p dto.PresensiDTO) (entity.Presensi, error)
+	Delete(npm string, matkul string, minggu uint8) error
 }
 
 type presensiService struct {
@@ -35,7 +36,7 @@ func (service *presensiService) FindByMatkulAndMinggu(matkul string, minggu uint
 	return res, err
 }
 
-func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi, error) {
+func (service *presensiService) Insert(p dto.PresensiDTO) (entity.Presensi, error) {
 	presensi := entity.Presensi{}
 
 	err := smapping.FillStruct(&presensi, smapping.MapFields(&p))
@@ -46,7 +47,7 @@ func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi
 	}
 	// Check if mahasiswa not in 4IA01
 	mhs, err := service.mahasiswaRepository.FindByNPM(presensi.NPM)
-	// log.Println(&mhs)
+
 	if mhs.NPM == "" {
 		err := errors.New(mhs.NPM + " not register in 4IA01")
 		return entity.Presensi{}, err
@@ -65,6 +66,19 @@ func (service *presensiService) Insert(p dto.PresensiInsertDTO) (entity.Presensi
 		return entity.Presensi{}, err
 	}
 	return res, err
+}
+
+// MASIH BUG
+func (service *presensiService) Delete(npm string, matkul string, minggu uint8) error {
+
+	res, err := service.presensiRepository.FindPresensi(npm, matkul, minggu)
+
+	if res == nil {
+		return err
+	}
+	log.Println("sini")
+	err = service.presensiRepository.DeletePresensi(npm, matkul, minggu)
+	return err
 }
 
 func parseGetPresensi(matkul string, minggu uint8, mahasiswa []dto.PresensiResultDTO) responseGetPresensi {

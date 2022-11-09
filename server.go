@@ -42,6 +42,7 @@ func main() {
 	{
 		presensiRoutes.POST("/", presensiController.Insert)
 		presensiRoutes.GET("/", presensiController.FindPresensiByMatkulAndMinggu)
+		presensiRoutes.DELETE("/", presensiController.Delete)
 		presensiRoutes.GET("/:npm", mahasiswaController.FindByNPM)
 	}
 	r.GET("api/ping", mahasiswaController.All)

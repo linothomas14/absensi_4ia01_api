@@ -11,6 +11,7 @@ type PresensiRepository interface {
 	InsertPresensi(mhs entity.Presensi) (entity.Presensi, error)
 	FindPresensiByMatkulAndMinggu(matkul string, minggu uint8) ([]dto.PresensiResultDTO, error)
 	FindPresensi(npm string, matkul string, minggu uint8) (*entity.Presensi, error)
+	DeletePresensi(npm string, matkul string, minggu uint8) error
 }
 
 type presensiConnection struct {
@@ -53,4 +54,14 @@ func (db *presensiConnection) InsertPresensi(p entity.Presensi) (entity.Presensi
 	}
 	err = db.connection.Find(&p).Error
 	return p, err
+}
+
+func (db *presensiConnection) DeletePresensi(npm string, matkul string, minggu uint8) error {
+	var p *entity.Presensi
+	err := db.connection.Where("matkul = ? AND minggu = ? AND npm = ?", matkul, minggu, npm).Delete(&p).Error
+	if err != nil {
+		return err
+	}
+
+	return err
 }

@@ -12,15 +12,13 @@ import (
 
 type PresensiController interface {
 	// All(context *gin.Context)
-	// BackupFindByMatkulAndMinggu(context *gin.Context)
 	FindPresensiByMatkulAndMinggu(context *gin.Context)
 	Insert(context *gin.Context)
+	Delete(context *gin.Context)
 	// Update(context *gin.Context)
-	// Delete(context *gin.Context)
 }
 
 type presensiController struct {
-	//
 	presensiService service.PresensiService
 }
 
@@ -30,7 +28,7 @@ func NewPresensiController(presensiServ service.PresensiService) PresensiControl
 	}
 }
 func (c *presensiController) Insert(context *gin.Context) {
-	var presensiInsertDTO dto.PresensiInsertDTO
+	var presensiInsertDTO dto.PresensiDTO
 
 	errDTO := context.ShouldBind(&presensiInsertDTO)
 
@@ -73,6 +71,30 @@ func (c *presensiController) FindPresensiByMatkulAndMinggu(context *gin.Context)
 	}
 
 	response := helper.BuildResponse("OK", result)
+	context.JSON(http.StatusCreated, response)
+
+}
+
+func (c *presensiController) Delete(context *gin.Context) {
+	var presensiDTO dto.PresensiDTO
+
+	errDTO := context.ShouldBindJSON(&presensiDTO)
+
+	if errDTO != nil {
+		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	err := c.presensiService.Delete(presensiDTO.NPM, presensiDTO.Matkul, uint8(presensiDTO.Minggu))
+
+	if err != nil {
+		res := helper.BuildErrorResponse(err.Error(), helper.EmptyObj{})
+		context.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	response := helper.BuildResponse("Data berhasil dihapus", "")
 	context.JSON(http.StatusCreated, response)
 
 }

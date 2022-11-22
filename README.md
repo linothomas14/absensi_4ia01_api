@@ -30,14 +30,15 @@ To run this project, you must have Golang and postgreSQL
     * [Get All Mahasiswa](#get-all-mahasiswa)
     * [Get Mahasiswa by NPM](#get-mahasiswa-by-npm)
 * [Presensi](#presensi)
-    * [Get All Presensi](#get-all-presensi)
+    * [Get Presensi](#get-presensi)
     * [Add Presensi](#add-presensi)
     * [Delete Presensi](#delete-presensi)
 
 ## Mahasiswa
 ### Get All Mahasiswa
 * Method : GET
-* URL : `/api/mahasiswa`    
+* URL : `/api/mahasiswa` 
+* Request body : -   
 * Response body  :
 ```json
 {
@@ -66,6 +67,7 @@ To run this project, you must have Golang and postgreSQL
 ### Get Mahasiswa by Npm
 * Method : GET
 * URL : `/api/mahasiswa/<string:npm>`    
+* Request body : -
 * Response body  :
 ```json 
 {
@@ -86,25 +88,40 @@ To run this project, you must have Golang and postgreSQL
 * Request body :
 ```json
 {
+    "npm": "56419764",
+    "minggu": 1, 
+    "matkul":"Bisnis Informatika"
+}
+```
+* Response body :
+```json
+{
     "message": "OK",
     "data": {
-        "id": 2,
+        "id": 1,
         "npm": "56419764",
-        "matkul": "TEKNIK KOMPILASI",
-        "minggu": 2 
+        "matkul": "Bisnis Informatika",
+        "minggu": 1 
     }
 }
 ```
-### Get All Presensi
+### Get Presensi
 * Method : GET
-* URL : `/api/presensi`    
+* URL : `/api/presensi` 
+* Request body :
+```json
+{
+    "minggu": 1, 
+    "matkul":"Bisnis Informatika"
+}
+```   
 * Response body  :
 ```json
 {
     "message": "OK",
     "data": {
-        "matkul": "TEKNIK KOMPILASI",
-        "minggu": 2,
+        "matkul": "Bisnis Informatika",
+        "minggu": 1,
         "mahasiswa" : [
             {
                 "nama" : "YULYANO THOMAS DJAYA",
@@ -118,6 +135,13 @@ To run this project, you must have Golang and postgreSQL
 * Method : DELETE
 * URL : `/api/presensi`    
 * Request body :
+```json
+{
+    "npm": "56419764",
+    "minggu": 1, 
+    "matkul":"Bisnis Informatika"
+}
+```  
 * Response body:
 ```json
 {

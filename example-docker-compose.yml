@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  web:
+    image: linothomas/go-absensi-4ia01-api:latest
+    ports:
+      - "HOST_PORT:CONTAINER_PORT"

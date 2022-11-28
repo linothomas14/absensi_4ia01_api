@@ -6,8 +6,10 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/joho/godotenv v1.4.0
 	github.com/mashingan/smapping v0.1.19
-	gorm.io/gorm v1.24.0
+	gorm.io/gorm v1.24.1-0.20221019064659-5dd2bb482755
 )
+
+require gorm.io/driver/postgres v1.4.5 // indirect
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect

@@ -6,16 +6,16 @@ import (
 
 	"github.com/linothomas14/absensi_4ia01_api/entity"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func SetupDatabaseConnection() *gorm.DB {
-	errEnv := godotenv.Load()
-	if errEnv != nil {
-		panic("Failed to load .env file")
-	}
+	// WITHOUT .ENV VAR
+	// errEnv := godotenv.Load()
+	// if errEnv != nil {
+	// 	panic("Failed to load .env file")
+	// }
 
 	dbHost := os.Getenv("DB_HOST")
 	dbUser := os.Getenv("DB_USER")

@@ -76,7 +76,6 @@ func (service *presensiService) Delete(npm string, matkul string, minggu uint8) 
 	if res == nil {
 		return err
 	}
-	log.Println("sini")
 	err = service.presensiRepository.DeletePresensi(npm, matkul, minggu)
 	return err
 }

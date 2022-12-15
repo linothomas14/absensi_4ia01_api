@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/linothomas14/absensi_4ia01_api/dto"
 	"github.com/linothomas14/absensi_4ia01_api/helper"
@@ -54,13 +55,12 @@ func (c *presensiController) Insert(context *gin.Context) {
 func (c *presensiController) FindPresensiByMatkulAndMinggu(context *gin.Context) {
 	var presensiGetDTO dto.PresensiGetDTO
 
-	errDTO := context.ShouldBindJSON(&presensiGetDTO)
+	matkul := context.Query("matkul")
+	minggu := context.Query("minggu")
+	mingguInt, _ := strconv.Atoi(minggu)
 
-	if errDTO != nil {
-		res := helper.BuildErrorResponse(errDTO.Error(), helper.EmptyObj{})
-		context.JSON(http.StatusBadRequest, res)
-		return
-	}
+	presensiGetDTO.Matkul = matkul
+	presensiGetDTO.Minggu = uint8(mingguInt)
 
 	result, err := c.presensiService.FindByMatkulAndMinggu(presensiGetDTO.Matkul, uint8(presensiGetDTO.Minggu))
 

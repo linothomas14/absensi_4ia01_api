@@ -123,23 +123,23 @@ To run this project, you must have Golang and postgreSQL
 - URL : `/api/presensi?matkul=string&minggu=string`
 - Request body : -
 
-````
-* Response body  :
+- Response body :
+
 ```json
 {
-    "message": "OK",
-    "data": {
-        "matkul": "Bisnis Informatika",
-        "minggu": 1,
-        "mahasiswa" : [
-            {
-                "nama" : "YULYANO THOMAS DJAYA",
-                "npm" : "56419764"
-            }
-        ]
-    }
+  "message": "OK",
+  "data": {
+    "matkul": "Bisnis Informatika",
+    "minggu": 1,
+    "mahasiswa": [
+      {
+        "nama": "YULYANO THOMAS DJAYA",
+        "npm": "56419764"
+      }
+    ]
+  }
 }
-````
+```
 
 ### Delete Presensi
 
